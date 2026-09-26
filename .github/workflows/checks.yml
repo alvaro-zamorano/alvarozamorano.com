@@ -1,0 +1,71 @@
+name: checks
+
+# Every change reaches main through a pull request, and this has to pass first:
+# types, build, layout at desktop and phone width with Kit's scene on, the
+# "How I build" story through to the approval, and Lighthouse for speed and
+# accessibility.
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: checks-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci --no-audit --no-fund
+
+      - name: Types
+        run: npm run check
+
+      - name: Build
+        run: npm run build
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Browser for the layout checks
+        run: |
+          pip install playwright==1.56.0
+          python -m playwright install --with-deps chromium
+
+      - name: Layout, and the How I build story
+        run: |
+          python3 -m http.server 4321 -d dist > /dev/null 2>&1 &
+          sleep 1
+          mkdir -p qa
+          python3 tools/qa.py qa http://127.0.0.1:4321 1440 900 desk
+          python3 tools/qa.py qa http://127.0.0.1:4321 390 844 phone
+          python3 tools/qa_method.py qa http://127.0.0.1:4321 1440 900 method-desk
+          python3 tools/qa_method.py qa http://127.0.0.1:4321 390 844 method-phone
+
+      - name: Speed and accessibility (Lighthouse)
+        run: npx --yes @lhci/cli@0.14.0 autorun
+
+      - name: Keep the screenshots and reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: checks
+          path: |
+            qa
+            lighthouse
+          retention-days: 14
