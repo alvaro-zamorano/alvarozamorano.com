@@ -1,0 +1,28 @@
+---
+import Base from '../layouts/Base.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import Hero from '../components/Hero.astro';
+import Work from '../components/Work.astro';
+import Method from '../components/Method.astro';
+import Writing from '../components/Writing.astro';
+import Studio from '../components/Studio.astro';
+import About from '../components/About.astro';
+import Contact from '../components/Contact.astro';
+---
+
+<Base>
+  <SiteHeader />
+  <main id="main">
+    <Hero />
+    <Work />
+    <Method />
+    <Studio />
+    <Writing />
+    <About />
+    <Contact />
+  </main>
+</Base>
+
+<script>
+  import '../scripts/site';
+</script>

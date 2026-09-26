@@ -1,0 +1,95 @@
+---
+import { work } from '../data/site';
+import Glyph from './Glyph.astro';
+---
+
+<section class="section wrap" id="work" data-theme="light" aria-labelledby="work-title">
+  <div class="section__head">
+    <h2 class="h2 reveal" id="work-title">
+      <span class="reveal-line"><span>{work.title}</span></span>
+    </h2>
+    <p class="mono eyebrow fade">{work.intro}</p>
+  </div>
+
+  <ol class="work-list">
+    {
+      work.items.map((p, i) => (
+        <li class="work-item" data-check style={`--d:${i * 90}ms`}>
+          <div class="work-item__glyph" aria-hidden="true">
+            <Glyph />
+          </div>
+          <div>
+            <h3 class="h3 work-item__name">{p.name}</h3>
+            <p class="mono work-item__kicker">{p.kicker}</p>
+          </div>
+          <div class="work-item__body">
+            <p>{p.text}</p>
+            <ul class="work-item__links mono">
+              {p.links.map((l) => (
+                <li>
+                  <a class="tlink" href={l.href} target="_blank" rel="noopener">
+                    {l.label}
+                    {l.lang && (
+                      <span class="tag" title="In Spanish">
+                        {l.lang}
+                      </span>
+                    )}
+                    <span aria-hidden="true">↗</span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </li>
+      ))
+    }
+  </ol>
+
+  <p class="work-also fade">
+    <span class="mono work-also__title">{work.alsoTitle}</span>
+    {
+      work.also.map((a) => (
+        <span class="work-also__item">
+          <a class="tlink" href={a.href} target="_blank" rel="noopener">
+            {a.name}
+            {a.lang && (
+              <span class="tag" title="In Spanish">
+                {a.lang}
+              </span>
+            )}
+            <span aria-hidden="true">↗</span>
+          </a>
+          <span class="work-also__text">, {a.text}.</span>
+        </span>
+      ))
+    }
+  </p>
+</section>
+
+<style>
+  /* smaller things, one line each, lined up after the label */
+  .work-also {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    column-gap: 0.9em;
+    row-gap: 0.35em;
+    align-items: baseline;
+    max-width: 72ch;
+    margin-top: 34px;
+    line-height: 1.7;
+  }
+
+  .work-also__title {
+    grid-column: 1;
+    grid-row: 1;
+    color: var(--muted);
+  }
+
+  .work-also__item {
+    grid-column: 2;
+  }
+
+  .work-also__text {
+    color: var(--muted);
+  }
+</style>

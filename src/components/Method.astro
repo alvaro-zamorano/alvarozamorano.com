@@ -1,0 +1,66 @@
+---
+// With WebGL and motion allowed, this section becomes a scroll story: Kit is taken
+// apart and rebuilt on a sticky stage, one step at a time
+// (src/scripts/kit/mount-method.ts). Without them, the steps stay a plain line.
+import { method } from '../data/site';
+import '../styles/method-story.css';
+---
+
+<section class="section wrap" id="method" data-theme="dark" aria-labelledby="method-title">
+  <div class="method-story" data-method>
+    <div class="mstage" data-method-stage>
+      <canvas class="mstage__canvas" aria-hidden="true"></canvas>
+      <div class="stage__scan" aria-hidden="true"></div>
+      <button type="button" class="mstage__approve mono" data-approve hidden aria-label={method.approveLabel}>
+        <span class="mstage__key" aria-hidden="true"></span>{method.approve}
+      </button>
+      <div class="stage__bar mono">
+        <p class="stage__status" role="status" aria-live="polite" tabindex="-1">
+          <span class="tick" aria-hidden="true"></span><span class="txt">Built. Checked.</span>
+        </p>
+      </div>
+    </div>
+
+    <div class="method-copy">
+      <div class="section__head">
+        <h2 class="h2 reveal" id="method-title">
+          <span class="reveal-line"><span>{method.title}</span></span>
+        </h2>
+        <p class="lead method__lead fade">{method.lead}</p>
+      </div>
+
+      <div class="flow-wrap">
+        <div class="flow__lane" aria-hidden="true">
+          <span class="flow__block" style="--delay:0s"></span>
+          <span class="flow__block is-fail" style="--delay:2.4s"></span>
+          <span class="flow__block" style="--delay:4.8s"></span>
+        </div>
+        <ol class="flow">
+          {
+            method.steps.map((s, i) => (
+              <li class="flow__step fade" data-step={i} style={`--d:${i * 110}ms`}>
+                <div class="flow__body">
+                  <span class="flow__node" aria-hidden="true" />
+                  <h3 class="flow__name">{s.name}</h3>
+                  <p class="flow__text">{s.text}</p>
+                </div>
+              </li>
+            ))
+          }
+        </ol>
+      </div>
+    </div>
+  </div>
+
+  <div class="method__payoff">
+    <p class="h2 reveal">
+      {method.payoff.map((l) => <span class="reveal-line"><span>{l}</span></span>)}
+    </p>
+    <p class="mono fade">{method.note}</p>
+  </div>
+</section>
+
+<script>
+  import { mountMethod } from '../scripts/kit/mount-method';
+  mountMethod();
+</script>

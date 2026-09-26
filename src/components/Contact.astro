@@ -1,0 +1,38 @@
+---
+import { contact, footer, site } from '../data/site';
+import kitFrontDark from '../assets/kit-front-dark.svg?raw';
+---
+
+<section class="section wrap contact" id="contact" data-theme="dark" aria-labelledby="contact-title">
+  <div>
+    <h2 class="display reveal" id="contact-title">
+      <span class="reveal-line"><span>{contact.title}</span></span>
+    </h2>
+    <p class="lead contact__lead fade">{contact.lead}</p>
+    <div class="contact__actions fade">
+      <a class="btn" href={contact.cta.href} target="_blank" rel="noopener">
+        {contact.cta.label}
+        <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"
+          ><path d="M3 11 11 3M4.5 3H11v6.5" fill="none" stroke="currentColor" stroke-width="1.5"></path></svg
+        >
+      </a>
+      <ul class="mono" style="display:flex;gap:26px">
+        {
+          contact.links.map((l) => (
+            <li>
+              <a class="tlink" href={l.href} target="_blank" rel="noopener">
+                {l.label} <span aria-hidden="true">↗</span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </div>
+
+  <footer class="contact__foot mono">
+    <p class="watch"><Fragment set:html={kitFrontDark} /> {contact.kit}</p>
+    <p>{footer.line}</p>
+    <p>{site.name}, {site.city}</p>
+  </footer>
+</section>

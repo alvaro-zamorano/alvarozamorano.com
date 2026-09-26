@@ -1,0 +1,27 @@
+---
+import { about } from '../data/site';
+import kitFront from '../assets/kit-front.svg?raw';
+---
+
+<section class="section wrap" id="about" data-theme="light" aria-labelledby="about-title">
+  <div class="section__head">
+    <h2 class="h2 reveal" id="about-title">
+      <span class="reveal-line"><span>{about.title}</span></span>
+    </h2>
+  </div>
+  <div class="about">
+    <p class="about__statement fade">{about.statement}</p>
+    <div class="about__lines">
+      {about.lines.map((l, i) => <p class="fade" style={`--d:${i * 70}ms`}>{l}</p>)}
+      <p class="about__kit fade">
+        <Fragment set:html={kitFront} />
+        <span>{about.kit}</span>
+      </p>
+      <p class="mono fade">
+        <a class="tlink" href={about.studio.href} target="_blank" rel="noopener">
+          {about.studio.label} <span aria-hidden="true">↗</span>
+        </a>
+      </p>
+    </div>
+  </div>
+</section>

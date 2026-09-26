@@ -1,0 +1,112 @@
+---
+// StudioAZM: the film side. The reel and the film loops play silently while they
+// are on screen; with reduced motion or motion paused they stay on their poster
+// (src/scripts/site.ts).
+import { site, studio } from '../data/site';
+import { studioMedia } from '../data/media';
+import '../styles/studio.css';
+---
+
+<section class="section wrap studio" id="studio" data-theme="dark" aria-labelledby="studio-title">
+  <div class="studio__rule" aria-hidden="true"></div>
+  <div class="section__head studio__head">
+    <div>
+      <p class="mono eyebrow fade">{studio.eyebrow}</p>
+      <h2 class="h2 reveal" id="studio-title">
+        {studio.title.map((l) => <span class="reveal-line"><span>{l}</span></span>)}
+      </h2>
+    </div>
+    <p class="lead studio__lead fade">{studio.lead}</p>
+  </div>
+
+  <figure class="studio__reel fade">
+    <video
+      class="studio__video"
+      muted
+      loop
+      playsinline
+      preload="none"
+      data-poster={studioMedia.reel.poster}
+      aria-label={studio.reel.alt}
+      data-inview-video
+    >
+      <source data-src={studioMedia.reel.webm} type="video/webm" />
+      <source data-src={studioMedia.reel.mp4} type="video/mp4" />
+    </video>
+    <noscript>
+      <img class="studio__video" src={studioMedia.reel.poster} alt={studio.reel.alt} width="1280" height="720" loading="lazy" decoding="async" />
+    </noscript>
+    <figcaption class="mono studio__caption">
+      <span>{studio.reel.caption}</span>
+      <a class="tlink" href={studio.links[0].href} target="_blank" rel="noopener">
+        {studio.links[0].label}
+        <span class="tag" title="In Spanish">{studio.links[0].lang}</span>
+        <span aria-hidden="true">↗</span>
+      </a>
+    </figcaption>
+  </figure>
+
+  <div class="studio__work">
+    <p class="mono eyebrow fade">{studio.workTitle}</p>
+    <ul class="pieces">
+      {
+        studio.pieces.map((pc, i) => {
+          const m = studioMedia.pieces[i];
+          const media = m.mp4 ? (
+            <>
+              <video class="piece__media" muted loop playsinline preload="none" data-poster={m.poster} aria-hidden="true" data-inview-video>
+                <source data-src={m.webm} type="video/webm" />
+                <source data-src={m.mp4} type="video/mp4" />
+              </video>
+              <noscript>
+                <img class="piece__media" src={m.poster} alt="" width="960" height="640" loading="lazy" decoding="async" />
+              </noscript>
+            </>
+          ) : (
+            <img class="piece__media" src={m.still} alt="" width="640" height="427" loading="lazy" decoding="async" />
+          );
+          const body = (
+            <>
+              {media}
+              <span class="mono piece__brand">{pc.brand}</span>
+              <span class="piece__name">{pc.name}</span>
+              <span class="mono piece__kind">
+                {pc.kind}
+                {pc.lang && (
+                  <>
+                    {' '}
+                    <span class="tag" title="In Spanish">
+                      {pc.lang}
+                    </span>
+                  </>
+                )}
+                {pc.href && <span aria-hidden="true"> ↗</span>}
+              </span>
+            </>
+          );
+          return (
+            <li class="piece fade" style={`--d:${i * 90}ms`}>
+              {pc.href ? (
+                <a href={pc.href} target="_blank" rel="noopener">
+                  {body}
+                </a>
+              ) : (
+                <div>{body}</div>
+              )}
+            </li>
+          );
+        })
+      }
+    </ul>
+  </div>
+
+  <div class="studio__actions fade">
+    <a class="btn" href={studio.links[1].href} target="_blank" rel="noopener">
+      {studio.links[1].label}
+      <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"
+        ><path d="M3 11 11 3M4.5 3H11v6.5" fill="none" stroke="currentColor" stroke-width="1.5"></path></svg
+      >
+    </a>
+    <p class="mono studio__note">{site.studio.replace('https://', '')}, in Spanish</p>
+  </div>
+</section>

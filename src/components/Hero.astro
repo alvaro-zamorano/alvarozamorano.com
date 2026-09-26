@@ -1,0 +1,56 @@
+---
+import { hero } from '../data/site';
+import { media } from '../data/media';
+---
+
+<section class="hero" id="top" data-theme="light" aria-labelledby="hero-title">
+  <div class="hero__text" data-theme="light">
+    <p class="eyebrow mono">{hero.eyebrow}</p>
+    <h1 class="display" id="hero-title">
+      {hero.title.map((line) => <span style="display:block">{line}</span>)}
+    </h1>
+    <p class="lead">{hero.lead}</p>
+    <ul class="hero__links mono">
+      {
+        hero.links.map((l) => (
+          <li>
+            <a
+              class="tlink"
+              href={l.href}
+              {...(l.icon === 'out' ? { target: '_blank', rel: 'noopener' } : {})}
+            >
+              {l.label}
+              <span aria-hidden="true">{l.icon === 'out' ? '↗' : '↓'}</span>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+
+  <div class="stage" id="kit-stage" data-theme="dark">
+    <canvas class="stage__canvas" aria-hidden="true"></canvas>
+    <div class="stage__fallback" aria-hidden="true" style={`--kit-still: url(${media.still}); --kit-still-s: url(${media.stillSmall})`}></div>
+    <div class="stage__scan" aria-hidden="true"></div>
+    <p class="sr-only">{hero.kit.alt}</p>
+    <div class="stage__bar mono">
+      <p class="stage__status" role="status" aria-live="polite">
+        <span class="tick" aria-hidden="true"></span><span class="txt">Building Kit</span>
+      </p>
+      <div class="stage__side">
+        <p class="stage__hint" data-kit-hint hidden data-pointer={hero.kit.hintPointer} data-touch={hero.kit.hintTouch}>
+          {hero.kit.hintPointer}
+        </p>
+        <div class="stage__controls">
+          <button type="button" class="linkbtn" data-kit-break>{hero.kit.button}</button>
+          <button type="button" class="linkbtn" data-motion-toggle aria-pressed="false">Pause motion</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  import { mountKit } from '../scripts/kit/mount';
+  mountKit();
+</script>

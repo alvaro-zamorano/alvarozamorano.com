@@ -1,0 +1,50 @@
+---
+import Base from '../layouts/Base.astro';
+import kitFrontDark from '../assets/kit-front-dark.svg?raw';
+---
+
+<Base title="Page not found, Álvaro Zamorano" noindex>
+  <main id="main" class="nf" data-theme="dark">
+    <p class="mono eyebrow">Error, page not found</p>
+    <h1 class="display">This page broke.</h1>
+    <p class="lead">Kit is putting it back together. Meanwhile, the rest of the site is fine.</p>
+    <p><a class="btn" href="/">Back home</a></p>
+    <div class="nf__kit" aria-hidden="true"><Fragment set:html={kitFrontDark} /></div>
+  </main>
+</Base>
+
+<style>
+  .nf {
+    min-height: 100svh;
+    display: grid;
+    align-content: center;
+    gap: 28px;
+    padding: 96px var(--gutter);
+  }
+  .nf__kit {
+    width: 72px;
+    height: 72px;
+    margin-top: 24px;
+    animation: scatter 3.2s var(--ease) infinite;
+  }
+  .nf__kit :global(svg) {
+    width: 100%;
+    height: 100%;
+  }
+  @keyframes scatter {
+    0%,
+    100% {
+      transform: none;
+      filter: grayscale(0);
+    }
+    40% {
+      transform: translate(6px, -6px) rotate(-8deg);
+      filter: grayscale(1);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .nf__kit {
+      animation: none;
+    }
+  }
+</style>
