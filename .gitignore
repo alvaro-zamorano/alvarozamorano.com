@@ -1,0 +1,11 @@
+node_modules/
+dist/
+.astro/
+# generated at build time by scripts/build-kit.mjs
+src/data/kit.json
+src/assets/
+public/favicon.svg
+# check output
+qa/
+lighthouse/
+.lighthouseci/

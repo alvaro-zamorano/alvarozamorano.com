@@ -1,0 +1,35 @@
+# Álvaro Zamorano
+
+> AI Systems Architect in Madrid. I design AI systems that run on their own, and the checks that prove they work.
+
+Principle: verification over vibes. If a machine can't check that something is done, it isn't specified yet.
+
+## Work
+- [AgentOS](https://github.com/alvaro-zamorano/agentos): autonomous agent runtime. Each mission carries a machine-checkable definition of done and a separate verifier decides when it is met. Humans step in only for payments or irreversible actions.
+- [A machine-verifiable definition of done](https://github.com/alvaro-zamorano/agentos/blob/main/docs/machine-verifiable-dod.md): essay.
+- [LiveKnowledge](https://liveknowledge.vercel.app): consulting reports clients can question; every answer cites the exact page (Spanish).
+- [HABLA](https://machineready.vercel.app): audit of whether AI agents can find, read and cite a website; every check is one reproducible command (Spanish). Source: https://github.com/alvaro-zamorano/Machineready
+- [esGEO](https://www.esgeo.ai): method and tools for getting content cited by AI models (Spanish). Source: https://github.com/alvaro-zamorano/geo-citation-craft
+- Also: [PS2WEB](https://dist-ivory-phi-37.vercel.app), a PlayStation 2 emulator in the browser (bring your own games; source: https://github.com/alvaro-zamorano/ps2web); [Plano 3D](https://github.com/alvaro-zamorano/studioarquitectura), verified measurements and a 3D view from an architect's floor plan, with a human approving the overlay before any link goes out (panel, Spanish: https://studioarquitectura.vercel.app).
+
+## Writing (Kit's log)
+Scenes of Kit, each one thing building agents taught me, linked to where I wrote it up.
+- Writing code → defining done: [A machine-verifiable definition of done](https://github.com/alvaro-zamorano/agentos/blob/main/docs/machine-verifiable-dod.md) (essay).
+- Judging the demo → checking the wiring: [Most agents are demos in a costume](https://www.linkedin.com/feed/update/urn:li:ugcPost:7480154055735074816/) (video, LinkedIn).
+- More agents → clear handoffs: [The moat keeps moving](https://www.linkedin.com/feed/update/urn:li:ugcPost:7478334475769245696/) (video, LinkedIn).
+- Written for people → read by machines: [Your next reader is a machine](https://www.linkedin.com/feed/update/urn:li:ugcPost:7470007234769477633/) (carousel, LinkedIn, Spanish).
+- Watching every step → trusting the checks: how I build, on this page (define done, let the agents work, check every result, call a human when it matters).
+- Also in the log: a map → a compass; one prompt → a whole system; dashboards → sitting with traces.
+
+## Studio
+- [StudioAZM](https://www.studioazm.com): my film studio. AI-generated cinematic scenes for brands, directed shot by shot: script, optics, light and cut (Spanish).
+- Work for brands: Prosegur, two films (Hybrid Security, and POPS for the 2026 convention); The Boston Pharmacy (campaign: three spots, Reels and a consultation landing, https://alvaro-pipeline.pages.dev/boston); Cuchitas (spec ad: tortillas so Mexican they change your accent).
+
+## About
+- By day works on AI for large enterprises; by night builds with it.
+- Industrial engineer, MSc, Universidad Politécnica de Madrid. Anthropic certifications in Claude: Architect, Developer and Foundations.
+- Builds AI-first: directs the tools, writes the checks, trusts what passes them.
+
+## Contact
+- LinkedIn: https://www.linkedin.com/in/azmglg/
+- GitHub: https://github.com/alvaro-zamorano

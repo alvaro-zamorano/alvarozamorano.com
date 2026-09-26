@@ -1,0 +1,23 @@
+{
+  "name": "alvarozamorano-site",
+  "private": true,
+  "type": "module",
+  "version": "3.0.0",
+  "scripts": {
+    "kit": "node scripts/build-kit.mjs",
+    "dev": "npm run kit && astro dev",
+    "build": "npm run kit && astro build",
+    "preview": "astro preview",
+    "check": "npm run kit && tsc --noEmit -p tsconfig.json"
+  },
+  "dependencies": {
+    "@fontsource/instrument-sans": "5.3.0",
+    "@fontsource/jetbrains-mono": "5.3.0",
+    "astro": "7.3.5",
+    "three": "0.186.1"
+  },
+  "devDependencies": {
+    "@types/three": "0.186.0",
+    "typescript": "7.0.2"
+  }
+}
