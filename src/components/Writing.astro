@@ -1,0 +1,290 @@
+---
+// Writing, told as Kit's log: one stage and the list of lessons beside it. The
+// stage plays one scene at a time and moves on when the clip ends; picking a
+// lesson jumps to its scene. As a scene plays, its lesson is checked: "from" is
+// struck out and "to" earns its green (the same grammar as the Work rows).
+// Nothing plays against reduced motion or "Pause motion" unless the visitor
+// presses play on the stage, and nothing loads until the section is near.
+import { writing } from '../data/site';
+import { logMedia } from '../data/media';
+import Glyph from './Glyph.astro';
+import '../styles/log.css';
+
+const first = logMedia[writing.entries[0].scene];
+---
+
+<section class="section wrap log" id="writing" data-theme="light" aria-labelledby="writing-title" data-log>
+  <div class="section__head">
+    <div>
+      <p class="mono eyebrow fade">{writing.eyebrow}</p>
+      <h2 class="h2 reveal" id="writing-title">
+        <span class="reveal-line"><span>{writing.title}</span></span>
+      </h2>
+    </div>
+    <p class="lead fade">{writing.lead}</p>
+  </div>
+
+  <div class="log__body">
+    <div class="log__stage" id="log-stage">
+      <video
+        class="log__video is-front"
+        muted
+        playsinline
+        preload="none"
+        data-poster={first.poster}
+        aria-hidden="true"
+        data-log-video></video>
+      <video class="log__video" muted playsinline preload="none" aria-hidden="true" data-log-video></video>
+      <noscript>
+        <img class="log__video is-front" src={first.poster} alt="" width="720" height="960" loading="lazy" decoding="async" />
+      </noscript>
+      <div class="log__bars" aria-hidden="true">
+        {writing.entries.map(() => <span class="log__bar"><span class="log__fill" /></span>)}
+      </div>
+      <button type="button" class="log__toggle" data-log-toggle hidden>
+        <svg class="log__icon log__icon--pause" width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"
+          ><path d="M3 2h3v10H3zM8 2h3v10H8z" fill="currentColor"></path></svg
+        >
+        <svg class="log__icon log__icon--play" width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"
+          ><path d="M3 1.5v11L12.5 7z" fill="currentColor"></path></svg
+        >
+      </button>
+    </div>
+
+    <ol class="log__list">
+      {
+        writing.entries.map((e) => {
+          const m = logMedia[e.scene];
+          const internal = e.link?.href.startsWith('#');
+          return (
+            <li class="log__item" data-log-item data-mp4={m.mp4} data-webm={m.webm} data-poster={m.poster} data-dur={m.dur}>
+              <button type="button" class="log__pick" aria-controls="log-stage">
+                <Glyph />
+                <span class="log__shift">
+                  <span class="log__from">{e.from}</span>
+                  <span class="log__arrow" aria-hidden="true">
+                    →
+                  </span>
+                  <span class="sr-only">, now </span>
+                  <span class="log__to">{e.to}</span>
+                </span>
+              </button>
+              {e.link &&
+                (internal ? (
+                  <a class="log__read" href={e.link.href}>
+                    <span class="log__title">{e.link.title}</span>
+                    <span class="mono log__meta">
+                      {e.link.meta} <span aria-hidden="true">↑</span>
+                    </span>
+                  </a>
+                ) : (
+                  <a class="log__read" href={e.link.href} target="_blank" rel="noopener">
+                    <span class="log__title">{e.link.title}</span>
+                    <span class="mono log__meta">
+                      {e.link.meta}
+                      {e.link.lang && (
+                        <>
+                          {' '}
+                          <span class="tag" title="In Spanish">
+                            {e.link.lang}
+                          </span>
+                        </>
+                      )}{' '}
+                      <span aria-hidden="true">↗</span>
+                    </span>
+                  </a>
+                ))}
+            </li>
+          );
+        })
+      }
+    </ol>
+  </div>
+</section>
+
+<script>
+  const root = document.querySelector<HTMLElement>('[data-log]');
+  const stage = root?.querySelector<HTMLElement>('.log__stage');
+  const toggle = root?.querySelector<HTMLButtonElement>('[data-log-toggle]');
+  if (root && stage && toggle) {
+    const videos = [...root.querySelectorAll<HTMLVideoElement>('[data-log-video]')];
+    const items = [...root.querySelectorAll<HTMLElement>('[data-log-item]')];
+    const picks = items.map((li) => li.querySelector<HTMLButtonElement>('.log__pick')!);
+    const fills = [...root.querySelectorAll<HTMLElement>('.log__fill')];
+    const html = document.documentElement;
+    const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const stacked = matchMedia('(max-width: 860px)');
+    const globalPaused = () => html.classList.contains('motion-paused');
+    const n = items.length;
+
+    // the visitor's choice for this stage; it starts from their motion settings
+    let want = !reduced && !globalPaused();
+    let near = false;
+    let onScreen = false;
+    let current = 0;
+    let front = videos[0];
+    let raf = 0;
+
+    // with nothing playing the log reads finished; playing, it earns each check
+    if (!want) items.forEach((li) => li.classList.add('is-checked'));
+    root.dataset.mode = want ? 'play' : 'still';
+
+    const other = (v: HTMLVideoElement) => (v === videos[0] ? videos[1] : videos[0]);
+
+    // give a video the clip of scene i (once), ready to play from the start
+    const fill = (v: HTMLVideoElement, i: number) => {
+      if (v.dataset.idx === String(i)) return;
+      const d = items[i].dataset;
+      v.dataset.idx = String(i);
+      v.poster = d.poster!;
+      v.preload = 'auto';
+      v.replaceChildren(
+        ...(['webm', 'mp4'] as const).map((t) => {
+          const s = document.createElement('source');
+          s.src = d[t]!;
+          s.type = `video/${t}`;
+          return s;
+        }),
+      );
+      v.load();
+    };
+
+    // a still frame of scene i, nothing loading
+    const still = (i: number) => {
+      front.pause();
+      delete front.dataset.idx;
+      front.replaceChildren();
+      front.poster = items[i].dataset.poster!;
+      front.load();
+      other(front).classList.remove('is-front');
+      front.classList.add('is-front');
+    };
+
+    const progress = (p: number) => {
+      fills[current].style.setProperty('--p', p.toFixed(3));
+      items[current].style.setProperty('--p', p.toFixed(3));
+    };
+    const tick = () => {
+      const d = Number.isFinite(front.duration) ? front.duration : Number(items[current].dataset.dur);
+      if (d) progress(Math.min(1, front.currentTime / d));
+      raf = requestAnimationFrame(tick);
+    };
+
+    const paint = () => {
+      items.forEach((li, k) => {
+        li.classList.toggle('is-active', k === current);
+        li.style.setProperty('--p', k === current && root.dataset.mode === 'still' ? '1' : '0');
+        picks[k].setAttribute('aria-current', String(k === current));
+      });
+      fills.forEach((f, k) => f.style.setProperty('--p', k < current ? '1' : '0'));
+    };
+
+    const syncToggle = () => {
+      toggle.hidden = false;
+      toggle.dataset.state = want ? 'playing' : 'paused';
+      toggle.setAttribute('aria-label', want ? 'Pause the scenes' : 'Play the scenes');
+    };
+
+    const stop = () => {
+      want = false;
+      root.dataset.mode = 'still';
+      front.pause();
+      syncToggle();
+    };
+
+    // if the browser refuses to autoplay (data saver, low power), fall back to
+    // the still log: every lesson checked, the play button waiting
+    const play = () =>
+      front.play().catch((err: DOMException) => {
+        if (err?.name !== 'NotAllowedError') return;
+        items.forEach((li) => li.classList.add('is-checked'));
+        stop();
+      });
+
+    const sync = () => {
+      root.dataset.mode = want ? 'play' : 'still';
+      // the first still arrives with the section, not with the page
+      if ((near || onScreen) && !front.getAttribute('poster')) front.poster = items[current].dataset.poster!;
+      if (want && (near || onScreen)) fill(front, current);
+      if (want && onScreen) {
+        items[current].classList.add('is-checked');
+        play();
+      } else front.pause();
+      syncToggle();
+    };
+
+    const show = (i: number) => {
+      current = (i + n) % n;
+      paint();
+      if (!want) return still(current);
+      items[current].classList.add('is-checked');
+      // the hidden video usually holds this scene already; swap and fade
+      const next = other(front);
+      fill(next, current);
+      next.currentTime = 0;
+      const old = front;
+      front = next;
+      front.classList.add('is-front');
+      old.classList.remove('is-front');
+      old.pause();
+      if (onScreen) play();
+    };
+
+    for (const v of videos) {
+      v.addEventListener('ended', () => v === front && show(current + 1));
+      v.addEventListener('playing', () => {
+        if (v !== front) return;
+        cancelAnimationFrame(raf);
+        raf = requestAnimationFrame(tick);
+        // once the fade is over, load the scene after this one into the hidden video
+        const hidden = other(v);
+        setTimeout(() => {
+          if (want && front === v) fill(hidden, (current + 1) % n);
+        }, 800);
+      });
+      v.addEventListener('pause', () => v === front && cancelAnimationFrame(raf));
+    }
+
+    picks.forEach((b, k) =>
+      b.addEventListener('click', () => {
+        if (k === current && want) {
+          front.currentTime = 0;
+          play();
+        } else show(k);
+        // stacked, the stage sits above the list: bring it into view
+        if (stacked.matches) stage.scrollIntoView({ block: 'nearest', behavior: reduced ? 'auto' : 'smooth' });
+      }),
+    );
+
+    toggle.addEventListener('click', () => {
+      if (want) return stop();
+      want = true;
+      sync();
+    });
+
+    const watch = (rootMargin: string, threshold: number, set: (on: boolean) => void) =>
+      new IntersectionObserver(
+        (entries) => {
+          set(entries[entries.length - 1].isIntersecting);
+          sync();
+        },
+        { rootMargin, threshold },
+      ).observe(stage);
+    watch('25% 0px', 0, (on) => (near = on));
+    watch('0px', 0.25, (on) => (onScreen = on));
+
+    // "Pause motion" on Kit's stage pauses this one too, and "Play motion" resumes
+    // it; other class changes on <html> leave the visitor's choice here alone
+    let lastGlobal = globalPaused();
+    new MutationObserver(() => {
+      const g = globalPaused();
+      if (g === lastGlobal || reduced) return;
+      lastGlobal = g;
+      want = !g;
+      sync();
+    }).observe(html, { attributes: true, attributeFilter: ['class'] });
+
+    paint();
+    syncToggle();
+  }
+</script>
