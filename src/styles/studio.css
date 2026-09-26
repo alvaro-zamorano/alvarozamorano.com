@@ -1,0 +1,131 @@
+/* StudioAZM section (src/components/Studio.astro): the reel, work for brands, one call. */
+
+/* it follows another dark section: a rule marks the new chapter */
+.studio {
+  padding-top: 0;
+}
+
+.studio__rule {
+  height: 1px;
+  margin-bottom: var(--section);
+  background: var(--line-dark);
+}
+
+.studio__head {
+  align-items: end;
+}
+
+.studio__head .eyebrow {
+  margin-bottom: 18px;
+}
+
+.studio__lead {
+  max-width: 34ch;
+}
+
+.studio__reel {
+  margin: 0;
+}
+
+.studio__video {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  background: #000;
+  object-fit: cover;
+}
+
+.studio__caption {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  padding-top: 14px;
+  color: var(--paper-2);
+}
+
+.studio__caption .tlink {
+  color: var(--paper);
+}
+
+.studio__work {
+  margin-top: clamp(56px, 8vh, 96px);
+}
+
+.studio__work .eyebrow {
+  margin-bottom: 22px;
+}
+
+.pieces {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.piece {
+  min-width: 0;
+}
+
+.piece > a,
+.piece > div {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 6px;
+}
+
+.piece__media {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  height: auto;
+  aspect-ratio: 3 / 2;
+  object-fit: cover;
+  background: #1a1a1a;
+  margin-bottom: 8px;
+  transition: transform 0.6s var(--ease);
+}
+
+.piece a:hover .piece__media,
+.piece a:focus-visible .piece__media {
+  transform: translateY(-4px);
+}
+
+.piece__brand {
+  color: var(--paper-2);
+}
+
+.piece__name {
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  line-height: 1.3;
+}
+
+.piece__kind {
+  margin-top: 4px;
+  color: var(--paper-2);
+}
+
+.studio__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 18px 28px;
+  margin-top: clamp(48px, 7vh, 80px);
+}
+
+.studio__note {
+  color: var(--paper-2);
+}
+
+@media (max-width: 860px) {
+  .pieces {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 22px 14px;
+  }
+
+  .studio__caption {
+    flex-direction: column;
+    gap: 10px;
+  }
+}

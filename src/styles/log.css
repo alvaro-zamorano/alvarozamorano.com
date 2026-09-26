@@ -1,0 +1,256 @@
+/* Writing as Kit's log (src/components/Writing.astro): one stage, the lessons beside it. */
+
+.log__body {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  gap: clamp(32px, 6vw, 110px);
+  align-items: center;
+}
+
+/* ---- the stage: two videos on top of each other, the front one fades in */
+.log__stage {
+  position: relative;
+  max-width: 460px;
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+  background: var(--ink);
+  scroll-margin-top: 96px;
+}
+
+.log__video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 0.6s var(--ease-out);
+}
+
+.log__video.is-front {
+  opacity: 1;
+}
+
+/* a soft shade at the top so the bars read over bright skies */
+.log__stage::after {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto;
+  height: 64px;
+  background: linear-gradient(rgba(10, 10, 10, 0.38), rgba(10, 10, 10, 0));
+  pointer-events: none;
+}
+
+.log__bars {
+  position: absolute;
+  inset: 12px 12px auto;
+  z-index: 1;
+  display: none;
+  gap: 4px;
+}
+
+.js .log__bars {
+  display: flex;
+}
+
+.log__bar {
+  flex: 1;
+  height: 2px;
+  overflow: hidden;
+  background: rgba(245, 242, 235, 0.35);
+}
+
+.log__fill {
+  display: block;
+  height: 100%;
+  background: var(--paper);
+  transform-origin: left;
+  transform: scaleX(var(--p, 0));
+}
+
+.log__toggle {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border: 1px solid rgba(245, 242, 235, 0.3);
+  background: rgba(10, 10, 10, 0.55);
+  color: var(--paper);
+  transition: background 0.3s var(--ease-out);
+}
+
+.log__toggle[hidden] {
+  display: none;
+}
+
+.log__toggle:hover {
+  background: rgba(10, 10, 10, 0.8);
+}
+
+.log__toggle:focus-visible {
+  outline-offset: -4px;
+  outline-color: var(--paper);
+}
+
+.log__toggle[data-state='playing'] .log__icon--play,
+.log__toggle[data-state='paused'] .log__icon--pause {
+  display: none;
+}
+
+/* ---- the lessons */
+.log__list {
+  border-top: 1px solid var(--line-light);
+}
+
+.log__item {
+  position: relative;
+  padding-block: 14px 16px;
+  border-bottom: 1px solid var(--line-light);
+}
+
+/* the active lesson's rule fills in green as its scene plays */
+.log__item::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 2px;
+  background: var(--accent);
+  transform-origin: left;
+  transform: scaleX(0);
+}
+
+.log__item.is-active::after {
+  transform: scaleX(var(--p, 0));
+}
+
+.log__pick {
+  display: grid;
+  grid-template-columns: 22px minmax(0, 1fr);
+  gap: 18px;
+  align-items: center;
+  width: 100%;
+  text-align: left;
+  cursor: default;
+}
+
+.js .log__pick {
+  cursor: pointer;
+}
+
+.log__pick .glyph {
+  width: 20px;
+  height: 23px;
+}
+
+.log__shift {
+  font-size: clamp(1.15rem, 1.75vw, 1.6rem);
+  font-weight: 500;
+  letter-spacing: -0.015em;
+  line-height: 1.25;
+  transition: transform 0.6s var(--ease);
+}
+
+.log__item.is-active .log__shift,
+.log__pick:hover .log__shift {
+  transform: translateX(10px);
+}
+
+/* the finished state is the default (no JS, reduced motion, nothing playing);
+   playing, a lesson starts unchecked and earns it when its scene comes up */
+.log__from {
+  color: var(--muted);
+  text-decoration: line-through;
+  text-decoration-thickness: 1px;
+  text-decoration-color: currentColor;
+  transition: text-decoration-color 0.45s var(--ease-out);
+}
+
+.log__arrow {
+  margin-inline: 0.3em;
+  color: var(--muted);
+}
+
+.log__to {
+  color: var(--accent);
+  transition: color 0.45s var(--ease-out) 0.3s;
+}
+
+:root:not(.js) .log__item .glyph .t {
+  fill: #2b9a78;
+}
+
+:root:not(.js) .log__item .glyph .l {
+  fill: #047857;
+}
+
+:root:not(.js) .log__item .glyph .r {
+  fill: #03684b;
+}
+
+.js .log__item:not(.is-checked) .log__from {
+  text-decoration-color: transparent;
+}
+
+.js .log__item:not(.is-checked) .log__to {
+  color: var(--muted);
+}
+
+/* where I wrote it up, under the lesson */
+.log__read {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 2px 12px;
+  margin: 8px 0 0 40px;
+  font-size: 0.9375rem;
+}
+
+.log__meta {
+  color: var(--muted);
+}
+
+.log__read:hover .log__title,
+.log__read:focus-visible .log__title {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+@media (max-width: 860px) {
+  .log__body {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 28px;
+  }
+
+  .log__stage {
+    max-width: 520px;
+  }
+
+  .log__pick {
+    grid-template-columns: 18px minmax(0, 1fr);
+    gap: 14px;
+  }
+
+  .log__pick .glyph {
+    width: 18px;
+    height: 20px;
+  }
+
+  .log__read {
+    margin-left: 32px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .log__video,
+  .log__shift,
+  .log__from,
+  .log__to {
+    transition: none;
+  }
+}

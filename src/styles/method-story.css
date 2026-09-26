@@ -1,0 +1,181 @@
+/* "How I build" as a scroll story. mount-method.ts adds .is-story to the section's
+   wrapper when WebGL and motion are available; without it these rules do nothing
+   and the steps stay the plain line from global.css. */
+
+.flow__body {
+  display: grid;
+  gap: 14px;
+  align-content: start;
+}
+
+.mstage {
+  display: none;
+}
+
+.method-story.is-story {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  column-gap: var(--gutter);
+  align-items: start;
+}
+
+.is-story .mstage {
+  position: sticky;
+  top: 0;
+  display: block;
+  grid-column: 2;
+  grid-row: 1;
+  height: 100vh;
+  height: 100svh;
+  margin-right: calc(-1 * var(--gutter));
+  overflow: hidden;
+  color: var(--paper);
+}
+
+.mstage__canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.is-story .method-copy {
+  grid-column: 1;
+  grid-row: 1;
+  padding-bottom: 45vh;
+}
+
+.is-story .section__head {
+  grid-template-columns: 1fr;
+  align-content: start;
+  min-height: 62vh; /* Kit is pinned and whole for a moment before step one */
+  margin-bottom: 0;
+}
+
+.is-story .flow__lane,
+.is-story .flow::before {
+  display: none;
+}
+
+.is-story .flow {
+  grid-template-columns: 1fr;
+  gap: 0;
+  padding: 0;
+}
+
+.is-story .flow__step {
+  min-height: 78vh;
+  padding-top: 12vh;
+}
+
+.is-story .flow__body {
+  position: relative;
+  padding-left: 32px;
+}
+
+.js .is-story .flow__step.fade.is-in {
+  opacity: 0.3;
+  transition: opacity 0.5s var(--ease-out), transform 0.8s var(--ease-out);
+}
+
+.js .is-story .flow__step.fade.is-in.is-active {
+  opacity: 1;
+}
+
+.is-story .flow__node,
+.is-story .flow__step:nth-child(3) .flow__node {
+  top: 0.5em;
+  left: 0;
+  background: var(--ink);
+  border-color: var(--paper-2);
+  transition: background-color 0.35s var(--ease-out), border-color 0.35s var(--ease-out);
+}
+
+.is-story .flow__step.is-done .flow__node {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.mstage__approve {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 13px 18px;
+  background: var(--paper);
+  color: var(--ink);
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  transition: background-color 0.35s var(--ease-out), color 0.35s var(--ease-out);
+}
+
+.mstage__approve:hover,
+.mstage__approve:focus-visible {
+  background: var(--accent);
+  color: var(--paper);
+}
+
+.mstage__approve[hidden] {
+  display: none;
+}
+
+.mstage__key {
+  width: 9px;
+  height: 9px;
+  background: var(--signal);
+}
+
+@media (max-width: 860px) {
+  .method-story.is-story {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .is-story .method-copy {
+    display: contents;
+  }
+
+  .is-story .section__head {
+    order: 0;
+    min-height: 0;
+    margin-bottom: 28px;
+  }
+
+  .is-story .mstage {
+    order: 1;
+    z-index: 2;
+    height: 58svh;
+    margin-inline: calc(-1 * var(--gutter));
+    background: var(--ink);
+  }
+
+  .is-story .flow-wrap {
+    order: 2;
+    padding-block: 20svh 36svh;
+  }
+
+  .is-story .flow {
+    padding-left: 0;
+  }
+
+  .is-story .flow__step {
+    min-height: 64svh;
+    padding-top: 5svh;
+  }
+
+  /* the step being read stays just under the stage */
+  .is-story .flow__body {
+    position: sticky;
+    top: calc(58svh + 20px);
+    padding-left: 30px;
+  }
+
+  .is-story .flow__node,
+  .is-story .flow__step:nth-child(3) .flow__node {
+    top: 0.45em;
+  }
+}
