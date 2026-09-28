@@ -1,0 +1,31 @@
+name: lockfile
+
+# One-off: let npm write package-lock.json for the new dependency on this branch,
+# so installs on CI and on Vercel stay exact. Removed again before the merge.
+
+on:
+  push:
+    branches: [feat/analytics]
+
+permissions:
+  contents: write
+
+jobs:
+  lock:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - run: npm install --package-lock-only --no-audit --no-fund
+
+      - name: Commit the lockfile
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898283+github-actions[bot]@users.noreply.github.com"
+          git add package-lock.json
+          git diff --cached --quiet || git commit -m "Update package-lock.json for @vercel/analytics, resolved by npm on CI"
+          git push
