@@ -7,6 +7,7 @@ import sans500 from '@fontsource/instrument-sans/files/instrument-sans-latin-500
 import sans400 from '@fontsource/instrument-sans/files/instrument-sans-latin-400-normal.woff2?url';
 import { site, work } from '../data/site';
 import { media } from '../data/media';
+import Analytics from '@vercel/analytics/astro';
 
 interface Props {
   title?: string;
@@ -17,6 +18,9 @@ interface Props {
 const { title = site.title, description = site.description, noindex = false } = Astro.props;
 const canonical = new URL(Astro.url.pathname, site.url).href;
 const ogImage = media.og;
+// Visit counts with Vercel Web Analytics (no cookies). Only in builds on Vercel, where its
+// routes exist; the CI checks build without it and stay the same.
+const analytics = process.env.VERCEL === '1';
 
 const jsonld = {
   '@context': 'https://schema.org',
@@ -89,6 +93,7 @@ const jsonld = {
     <meta name="twitter:card" content="summary_large_image" />
 
     <script type="application/ld+json" set:html={JSON.stringify(jsonld)} />
+    {analytics && <Analytics />}
 
     <script is:inline>
       // before paint: enable JS-only styles and restore the visitor's motion choice
