@@ -1,0 +1,326 @@
+/* Kit as a companion: the small Kit in the corner, his bubble, and the blocks he
+   stacks while he thinks. Takes the colour of the section under him (data-over),
+   like the header. Flat colour, hard edges, no shadows: the canon. */
+
+.kc {
+  position: fixed;
+  right: 14px;
+  bottom: calc(8px + env(safe-area-inset-bottom, 0px));
+  z-index: 45;
+  width: var(--kc-w, 110px);
+  height: var(--kc-h, 150px);
+  color: var(--ink);
+  --kc-bg: var(--paper);
+  --kc-line: var(--line-light);
+  --kc-dim: var(--muted);
+  --kc-link: var(--accent);
+  --kc-field: rgba(10, 10, 10, 0.04);
+}
+
+.kc[data-over='dark'] {
+  color: var(--paper);
+  --kc-bg: var(--ink);
+  --kc-line: var(--line-dark);
+  --kc-dim: var(--paper-2);
+  --kc-link: var(--signal);
+  --kc-field: rgba(245, 242, 235, 0.06);
+}
+
+.kc[hidden] {
+  display: none;
+}
+
+.kc__canvas {
+  width: 100%;
+  height: 100%;
+}
+
+.kc__hit {
+  position: absolute;
+  inset: 12% 0 0 0;
+  border-radius: 10px;
+}
+
+.kc__hit:focus-visible {
+  outline-offset: -2px;
+}
+
+/* the blocks he stacks while thinking, above his head */
+.kc__stack {
+  position: absolute;
+  left: 0;
+  bottom: calc(100% - 8px);
+  width: 100%;
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: center;
+  pointer-events: none;
+}
+
+.kc__block {
+  display: block;
+  width: 18px;
+  height: 20px;
+  margin-top: -6px;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: transform 0.22s var(--ease), opacity 0.16s linear;
+}
+
+.kc__block .glyph,
+.kc__bit .glyph {
+  width: 100%;
+  height: 100%;
+}
+
+.kc__block.is-in {
+  opacity: 1;
+  transform: none;
+}
+
+.kc__block.is-out {
+  opacity: 0;
+  transform: translateY(12px);
+}
+
+/* the one block he builds now and then, in front of his paws */
+.kc__bit {
+  position: absolute;
+  left: 4px;
+  bottom: 2px;
+  width: 18px;
+  height: 20px;
+  opacity: 0;
+  pointer-events: none;
+  transition: transform 0.3s var(--ease), opacity 0.16s linear;
+}
+
+.kc__bit.is-in {
+  opacity: 1;
+}
+
+.kc__bit.is-up {
+  opacity: 0;
+  transform: translateY(-14px);
+}
+
+/* ---- the bubble */
+
+.kc__bubble {
+  position: absolute;
+  right: 0;
+  bottom: calc(100% - 6px);
+  width: 304px;
+  padding: 12px 12px 10px;
+  background: var(--kc-bg);
+  border: 1px solid var(--kc-line);
+  transform-origin: 88% 100%;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(6px) scale(0.96);
+  transition: opacity 0.18s linear, transform 0.26s var(--ease), visibility 0s linear 0.26s;
+}
+
+.kc__bubble.is-open {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+  transition: opacity 0.16s linear, transform 0.26s var(--ease), visibility 0s;
+}
+
+.kc__ptr {
+  position: absolute;
+  right: 24px;
+  bottom: -6px;
+  width: 10px;
+  height: 10px;
+  background: var(--kc-bg);
+  border-right: 1px solid var(--kc-line);
+  border-bottom: 1px solid var(--kc-line);
+  transform: rotate(45deg);
+}
+
+.kc__close {
+  position: absolute;
+  top: 2px;
+  right: 4px;
+  padding: 4px 8px;
+  font-size: 1.25rem;
+  line-height: 1;
+  color: var(--kc-dim);
+}
+
+.kc__close:hover {
+  color: inherit;
+}
+
+.kc__who {
+  color: var(--kc-link);
+  margin-bottom: 4px;
+}
+
+.kc__you {
+  color: var(--kc-dim);
+  margin-bottom: 8px;
+  padding-right: 20px;
+  overflow-wrap: anywhere;
+}
+
+.kc__say {
+  font-size: 0.9375rem;
+  line-height: 1.45;
+  padding-right: 16px;
+  min-height: 1.45em;
+}
+
+.kc__caret {
+  display: inline-block;
+  width: 8px;
+  height: 14px;
+  margin-left: 2px;
+  vertical-align: -2px;
+  background: var(--kc-link);
+  animation: kc-blink 1s steps(2, start) infinite;
+}
+
+@keyframes kc-blink {
+  to {
+    visibility: hidden;
+  }
+}
+
+.kc__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.kc__chips:empty {
+  display: none;
+}
+
+.kc__chip {
+  padding: 5px 9px;
+  border: 1px solid var(--kc-line);
+  color: var(--kc-link);
+  text-align: left;
+  transition: border-color 0.2s linear;
+}
+
+.kc__chip:hover {
+  border-color: currentColor;
+}
+
+.kc__chip--out {
+  color: inherit;
+}
+
+.kc__chip--q {
+  font-family: var(--sans);
+  font-size: 0.875rem;
+  letter-spacing: 0;
+  color: inherit;
+  border-radius: 999px;
+}
+
+.kc__ask {
+  display: flex;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.kc__ask input {
+  flex: 1;
+  min-width: 0;
+  padding: 8px 10px;
+  font: inherit;
+  font-size: 0.9375rem;
+  color: inherit;
+  background: var(--kc-field);
+  border: 1px solid var(--kc-line);
+  border-radius: 0;
+}
+
+.kc__ask input::placeholder {
+  color: var(--kc-dim);
+  opacity: 1;
+}
+
+.kc__ask input:focus {
+  outline: none;
+  border-color: currentColor;
+}
+
+.kc__send {
+  padding: 0 12px;
+  font-size: 0.875rem;
+  color: var(--paper);
+  background: var(--accent);
+}
+
+.kc__send:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.kc__foot {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 8px;
+  font-size: 0.6875rem;
+  color: var(--kc-dim);
+}
+
+.kc__foot button {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.kc__foot button:hover {
+  color: var(--kc-link);
+}
+
+/* the last line of the page keeps clear of him */
+.js .contact__foot {
+  padding-right: 134px;
+}
+
+@media (max-width: 640px) {
+  .kc {
+    right: 8px;
+  }
+
+  .js .contact__foot {
+    padding-right: 104px;
+  }
+
+  .kc__bubble {
+    position: fixed;
+    left: 16px;
+    right: 16px;
+    width: auto;
+    bottom: calc(var(--kc-h, 150px) + 6px + env(safe-area-inset-bottom, 0px));
+    transform-origin: 85% 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .kc__bubble,
+  .kc__block,
+  .kc__bit {
+    transition: none;
+  }
+
+  .kc__caret {
+    animation: none;
+  }
+}
+
+.motion-paused .kc__bubble,
+.motion-paused .kc__block,
+.motion-paused .kc__bit {
+  transition: none !important;
+}
