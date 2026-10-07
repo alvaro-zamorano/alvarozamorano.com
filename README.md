@@ -28,6 +28,13 @@ npm run check   # types
 - Without a GPU (WebGL drawn in software, as in lab browsers and some virtual
   machines) the page shows a still Kit and the plain list of steps. `?kitgl`
   forces the scenes on.
+- Once the hero scrolls out of view, Kit hops into the corner as a companion
+  (`src/scripts/kit/companion.ts`): the same blocks drawn with canvas 2D, so he
+  works without a GPU. He comments on each section once and answers questions
+  from a bank in `src/data/companion.ts`, matched by keywords; there is no model
+  behind him and nothing leaves the browser. Off the bank he points to LinkedIn.
+  He leaves whenever one of his stages is on screen. Nothing of his loads before
+  the first scroll.
 - Copy lives in `src/data/site.ts`; the clips and stills on Cloudinary in
   `src/data/media.ts`.
 
@@ -41,6 +48,9 @@ Changes reach `main` through pull requests, and
   horizontal overflow, no console errors;
 - `tools/qa_method.py` at 1440 and 390 px: the "How I build" story at fixed
   points, then the approval;
+- `tools/qa_companion.py` at 1440 and 390 px: Kit arrives after the hero,
+  answers a question from the bank, leads to the section, turns a question off
+  the bank into a LinkedIn link, and leaves when his stage comes back;
 - Lighthouse on phone settings ([`lighthouserc.json`](lighthouserc.json)):
   performance at least 90, accessibility 100, best practices at least 95,
   SEO 100.
