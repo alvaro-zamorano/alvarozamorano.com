@@ -1,6 +1,6 @@
 User-agent: *
 Allow: /
 
-# For AI assistants: https://www.alvarozamorano.com/agents (as data: /agents.json, plain text: /llms.txt)
+# For AI assistants: https://www.alvarozamorano.com/agents (Markdown: /agents.md, data: /contact.json, plain text: /llms.txt)
 
 Sitemap: https://www.alvarozamorano.com/sitemap.xml

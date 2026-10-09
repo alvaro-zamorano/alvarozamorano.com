@@ -273,7 +273,8 @@ export const footer = {
   line: 'Built from blocks. Checked before every release.',
 };
 
-// The page for AI assistants (/agents) and the same thing as data (/agents.json).
+// The page for AI assistants (/agents), the same as Markdown (/agents.md) and as
+// data (/contact.json).
 // An assistant helping someone learn about Álvaro, or reach him, finds here who
 // he is, what it can check, what to ask its person before writing, and how the
 // person gets in touch. The assistant drafts; the person sends. Nothing on this
@@ -370,7 +371,8 @@ export const agents = {
   machine: {
     title: 'The same, for machines',
     links: [
-      { label: 'agents.json', href: '/agents.json', text: 'this page as data' },
+      { label: 'agents.md', href: '/agents.md', text: 'this page as Markdown' },
+      { label: 'contact.json', href: '/contact.json', text: 'this page as data' },
       { label: 'llms.txt', href: '/llms.txt', text: 'the whole site as plain text' },
       { label: 'sitemap.xml', href: '/sitemap.xml', text: 'every page' },
     ],

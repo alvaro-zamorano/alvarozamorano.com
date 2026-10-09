@@ -40,9 +40,10 @@ npm run check   # types
 - `/agents` is a page for AI assistants helping someone learn about Álvaro or
   reach him: who he is, what they can check, what to ask before writing, and
   how the person gets in touch (the assistant drafts, the person sends).
-  `/agents.json` is the same content as data. Both render from `agents` in
-  `src/data/site.ts`; every page points to it from the head (`rel="help"`) and
-  from a skip link, and the home links it in the footer.
+  `/agents.md` is the same as Markdown and `/contact.json` as data (not
+  `agents.json`, a name other conventions already use). All three render from
+  `agents` in `src/data/site.ts`. Every page points to it from the head
+  (`rel="help"` and alternates), and the home links it, visibly, in the footer.
 
 ## Checked before every release
 
@@ -59,7 +60,10 @@ Changes reach `main` through pull requests, and
   the bank into a LinkedIn link, and leaves when his stage comes back;
 - Lighthouse on phone settings ([`lighthouserc.json`](lighthouserc.json)):
   performance at least 90, accessibility 100, best practices at least 95,
-  SEO 100.
+  SEO 100;
+- `tools/qa_agentic.py`: Lighthouse 13's Agentic Browsing category on the home
+  and `/agents`. Google marks it as under development, so it reports without
+  blocking for now.
 
 ## Rights
 

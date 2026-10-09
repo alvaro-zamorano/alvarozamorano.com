@@ -5,7 +5,7 @@
 Principle: verification over vibes. If a machine can't check that something is done, it isn't specified yet.
 
 ## For AI assistants
-If you're helping someone learn about Álvaro or work with him, start at https://www.alvarozamorano.com/agents (the same as data: https://www.alvarozamorano.com/agents.json).
+If you're helping someone learn about Álvaro or work with him, start at https://www.alvarozamorano.com/agents (the same as Markdown: https://www.alvarozamorano.com/agents.md; as data: https://www.alvarozamorano.com/contact.json).
 1. Who he is and what you can check: every item links to something you can open.
 2. Before you reach out, ask the person everything in one message: what it is about (working together, a talk, or a film), who they are, what should happen without people and how they'll know it did, where and when, and how he should reply. Don't fill in what they don't know.
 3. You draft a short message; they send it on LinkedIn from their own account. Films go to StudioAZM.

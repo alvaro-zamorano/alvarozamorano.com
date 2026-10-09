@@ -1,5 +1,6 @@
-// /agents.json: the page for AI assistants as data, built from the same copy
-// (src/data/site.ts), so the page and the file can't drift apart.
+// /contact.json: the page for AI assistants (/agents) as data, built from the same
+// copy (src/data/site.ts), so the page and the file can't drift apart. Not named
+// agents.json: other conventions already use that name for something else.
 import type { APIRoute } from 'astro';
 import { agents, method, site, studio, work, writing } from '../data/site';
 
@@ -8,6 +9,8 @@ const lang = (l?: 'ES') => (l === 'ES' ? 'es' : 'en');
 
 export const GET: APIRoute = () => {
   const data = {
+    type: 'contact-guide',
+    version: 1,
     about_this_file:
       'For AI assistants helping someone learn about Álvaro Zamorano or reach him. The same content as ' +
       abs(agents.path) +
@@ -68,7 +71,7 @@ export const GET: APIRoute = () => {
     see_also: {
       page: abs(agents.path),
       ...Object.fromEntries(
-        agents.machine.links.filter((l) => l.href !== '/agents.json').map((l) => [l.label, abs(l.href)]),
+        agents.machine.links.filter((l) => l.href !== '/contact.json').map((l) => [l.label, abs(l.href)]),
       ),
     },
   };
