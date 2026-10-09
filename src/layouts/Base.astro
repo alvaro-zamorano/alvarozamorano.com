@@ -21,7 +21,7 @@ const ogImage = media.og;
 // Visit counts with Vercel Web Analytics (no cookies). Only in builds on Vercel, where its
 // routes exist; the CI checks build without it and stay the same.
 const analytics = process.env.VERCEL === '1';
-// every page points AI assistants to their own page; that page doesn't point to itself
+// every page points AI assistants to their own page; that page also offers itself as Markdown
 const onAgentsPage = Astro.url.pathname.replace(/\/$/, '') === agents.path;
 
 const jsonld = {
@@ -82,7 +82,8 @@ const jsonld = {
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="help" href={agents.path} title={agents.label} />
     <link rel="alternate" type="text/plain" href="/llms.txt" title="llms.txt" />
-    <link rel="alternate" type="application/json" href="/agents.json" title={`${agents.label}, as data`} />
+    <link rel="alternate" type="application/json" href="/contact.json" title={`${agents.label}, as data`} />
+    {onAgentsPage && <link rel="alternate" type="text/markdown" href="/agents.md" title={`${agents.label}, as Markdown`} />}
     <link rel="preload" href={sans500} as="font" type="font/woff2" crossorigin />
     <link rel="preload" href={sans400} as="font" type="font/woff2" crossorigin />
 
@@ -117,7 +118,6 @@ const jsonld = {
   </head>
   <body>
     <a class="skip" href="#main">Skip to content</a>
-    {!onAgentsPage && <a class="skip" href={agents.path}>{agents.label}</a>}
     <slot />
   </body>
 </html>
