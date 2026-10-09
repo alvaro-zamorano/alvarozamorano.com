@@ -60,6 +60,17 @@ jobs:
       - name: Speed and accessibility (Lighthouse)
         run: npx --yes @lhci/cli@0.14.0 autorun
 
+      # Lighthouse CI still ships Lighthouse 12, which has no agent checks. This runs
+      # Lighthouse 13's Agentic Browsing category on its own; Google marks it as under
+      # development, so for now it reports and does not block.
+      - name: Agent readiness (Lighthouse 13, informative)
+        continue-on-error: true
+        run: |
+          python3 -m http.server 4322 -d dist > /dev/null 2>&1 &
+          sleep 1
+          mkdir -p qa
+          python3 tools/qa_agentic.py qa http://127.0.0.1:4322 / /agents/
+
       - name: Keep the screenshots and reports
         if: always()
         uses: actions/upload-artifact@v4
