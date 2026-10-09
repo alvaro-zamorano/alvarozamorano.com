@@ -1,0 +1,40 @@
+---
+// Kit as a companion. Once the hero stage scrolls out of view he hops into the
+// corner, comments on each section once, and answers questions from a bank
+// (src/data/companion.ts), no model behind him. He leaves whenever one of his
+// stages (the hero, the How I build story) is on screen. Nothing here runs until
+// the first scroll, so the page loads exactly as before.
+import Glyph from './Glyph.astro';
+import { companion } from '../data/companion';
+import '../styles/companion.css';
+---
+
+<div class="kc" data-companion data-over="light" hidden>
+  <div class="kc__bubble" data-kc-bubble role="dialog" aria-label="Kit" aria-hidden="true">
+    <span class="kc__ptr" aria-hidden="true"></span>
+    <button type="button" class="kc__close" data-kc-close aria-label={companion.close}>×</button>
+    <p class="kc__who mono">kit</p>
+    <p class="kc__you mono" data-kc-you hidden></p>
+    <p class="kc__say" data-kc-say aria-live="polite"></p>
+    <div class="kc__chips mono" data-kc-chips></div>
+    <form class="kc__ask" data-kc-ask>
+      <label class="sr-only" for="kc-q">{companion.placeholder}</label>
+      <input id="kc-q" type="text" maxlength="200" autocomplete="off" placeholder={companion.placeholder} />
+      <button type="submit" class="kc__send" data-kc-send>{companion.send}</button>
+    </form>
+    <p class="kc__foot mono"><span>{companion.foot}</span><button type="button" data-kc-rest>{companion.rest}</button></p>
+  </div>
+  <div class="kc__stack" data-kc-stack aria-hidden="true">
+    <span class="kc__block"><Glyph /></span>
+    <span class="kc__block"><Glyph /></span>
+    <span class="kc__block"><Glyph /></span>
+  </div>
+  <div class="kc__bit" data-kc-bit aria-hidden="true"><Glyph /></div>
+  <canvas class="kc__canvas" data-kc-canvas aria-hidden="true"></canvas>
+  <button type="button" class="kc__hit" data-kc-hit aria-label={companion.hit}></button>
+</div>
+
+<script>
+  import { mountCompanion } from '../scripts/kit/companion-mount';
+  mountCompanion();
+</script>
