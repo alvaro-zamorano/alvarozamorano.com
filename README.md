@@ -37,6 +37,12 @@ npm run check   # types
   the first scroll.
 - Copy lives in `src/data/site.ts`; the clips and stills on Cloudinary in
   `src/data/media.ts`.
+- `/agents` is a page for AI assistants helping someone learn about Álvaro or
+  reach him: who he is, what they can check, what to ask before writing, and
+  how the person gets in touch (the assistant drafts, the person sends).
+  `/agents.json` is the same content as data. Both render from `agents` in
+  `src/data/site.ts`; every page points to it from the head (`rel="help"`) and
+  from a skip link, and the home links it in the footer.
 
 ## Checked before every release
 

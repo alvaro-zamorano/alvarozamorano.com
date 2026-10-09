@@ -1,5 +1,5 @@
 ---
-import { contact, footer, site } from '../data/site';
+import { agents, contact, footer, site } from '../data/site';
 import kitFrontDark from '../assets/kit-front-dark.svg?raw';
 ---
 
@@ -33,6 +33,7 @@ import kitFrontDark from '../assets/kit-front-dark.svg?raw';
   <footer class="contact__foot mono">
     <p class="watch"><Fragment set:html={kitFrontDark} /> {contact.kit}</p>
     <p>{footer.line}</p>
+    <p><a class="tlink" href={agents.path}>{agents.label}</a></p>
     <p>{site.name}, {site.city}</p>
   </footer>
 </section>

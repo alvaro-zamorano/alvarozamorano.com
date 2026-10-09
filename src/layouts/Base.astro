@@ -5,7 +5,7 @@ import '@fontsource/jetbrains-mono/400.css';
 import '../styles/global.css';
 import sans500 from '@fontsource/instrument-sans/files/instrument-sans-latin-500-normal.woff2?url';
 import sans400 from '@fontsource/instrument-sans/files/instrument-sans-latin-400-normal.woff2?url';
-import { site, work } from '../data/site';
+import { agents, site, work } from '../data/site';
 import { media } from '../data/media';
 import Analytics from '@vercel/analytics/astro';
 
@@ -21,6 +21,8 @@ const ogImage = media.og;
 // Visit counts with Vercel Web Analytics (no cookies). Only in builds on Vercel, where its
 // routes exist; the CI checks build without it and stay the same.
 const analytics = process.env.VERCEL === '1';
+// every page points AI assistants to their own page; that page doesn't point to itself
+const onAgentsPage = Astro.url.pathname.replace(/\/$/, '') === agents.path;
 
 const jsonld = {
   '@context': 'https://schema.org',
@@ -31,7 +33,7 @@ const jsonld = {
       name: site.name,
       jobTitle: site.role,
       url: site.url,
-      description,
+      description: site.description,
       address: { '@type': 'PostalAddress', addressLocality: 'Madrid', addressCountry: 'ES' },
       alumniOf: { '@type': 'CollegeOrUniversity', name: 'Universidad Politécnica de Madrid' },
       knowsAbout: [
@@ -78,6 +80,9 @@ const jsonld = {
     <meta name="theme-color" content="#F5F2EB" />
     <meta name="color-scheme" content="light" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="help" href={agents.path} title={agents.label} />
+    <link rel="alternate" type="text/plain" href="/llms.txt" title="llms.txt" />
+    <link rel="alternate" type="application/json" href="/agents.json" title={`${agents.label}, as data`} />
     <link rel="preload" href={sans500} as="font" type="font/woff2" crossorigin />
     <link rel="preload" href={sans400} as="font" type="font/woff2" crossorigin />
 
@@ -112,6 +117,7 @@ const jsonld = {
   </head>
   <body>
     <a class="skip" href="#main">Skip to content</a>
+    {!onAgentsPage && <a class="skip" href={agents.path}>{agents.label}</a>}
     <slot />
   </body>
 </html>
