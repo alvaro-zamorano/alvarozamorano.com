@@ -1,0 +1,454 @@
+---
+// The page for AI assistants: who Álvaro is, what can be checked, what to ask
+// the person before writing, and how they get in touch. Copy in src/data/site.ts
+// (agents), shared with /agents.json. A page of its own; the home only links here.
+import Base from '../layouts/Base.astro';
+import { agents, footer, site, work, writing } from '../data/site';
+import kitFront from '../assets/kit-front.svg?raw';
+
+const toc = [
+  { id: 'who', label: agents.who.title },
+  { id: 'check', label: agents.check.title },
+  { id: 'brief', label: agents.brief.title },
+  { id: 'contact', label: agents.contact.title },
+  { id: 'rules', label: agents.rules.title },
+];
+const writingLinks = writing.entries.filter((e) => e.link && e.link.href.startsWith('http'));
+const isOut = (href: string) => href.startsWith('http');
+---
+
+<Base title={agents.title} description={agents.description}>
+  <header class="ag-top wrap mono">
+    <a class="ag-top__brand" href="/" aria-label={`${site.name}, home`}>{site.name}</a>
+    <a class="tlink" href="/">{agents.back}</a>
+  </header>
+
+  <main id="main" class="ag" data-theme="light">
+    <section class="wrap ag-hero" aria-labelledby="agents-title">
+      <p class="mono eyebrow ag-hero__eyebrow"><Fragment set:html={kitFront} /> {agents.eyebrow}</p>
+      <h1 class="h2" id="agents-title">{agents.heading}</h1>
+      <p class="lead ag-hero__lead">{agents.lead}</p>
+      <nav class="mono ag-toc" aria-label="On this page">
+        <ul>
+          {toc.map((t) => <li><a class="tlink" href={`#${t.id}`}>{t.label}</a></li>)}
+        </ul>
+      </nav>
+    </section>
+
+    <section class="wrap ag-row" id="who" aria-labelledby="who-title">
+      <h2 class="ag-row__title" id="who-title">{agents.who.title}</h2>
+      <div class="ag-row__body">
+        <p class="ag-quote">{agents.who.text}</p>
+        <p class="ag-muted">{agents.who.credentials}</p>
+      </div>
+    </section>
+
+    <section class="wrap ag-row" id="check" aria-labelledby="check-title">
+      <h2 class="ag-row__title" id="check-title">{agents.check.title}</h2>
+      <div class="ag-row__body">
+        <p>{agents.check.lead}</p>
+        <ul class="ag-items">
+          {
+            work.items.map((p) => (
+              <li>
+                <h3 class="ag-items__name">{p.name}</h3>
+                <p>{p.text}</p>
+                <ul class="ag-links mono">
+                  {p.links.map((l) => (
+                    <li>
+                      <a
+                        class="tlink"
+                        href={l.href}
+                        hreflang={l.lang ? 'es' : undefined}
+                        target={isOut(l.href) ? '_blank' : undefined}
+                        rel={isOut(l.href) ? 'noopener' : undefined}
+                      >
+                        {l.label}
+                        {l.lang && (
+                          <span class="tag" title="In Spanish">
+                            {l.lang}
+                          </span>
+                        )}
+                        {isOut(l.href) && <span aria-hidden="true">↗</span>}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </li>
+            ))
+          }
+          {
+            work.also.map((a) => (
+              <li>
+                <h3 class="ag-items__name">{a.name}</h3>
+                <p>{a.text[0].toUpperCase() + a.text.slice(1)}.</p>
+                <ul class="ag-links mono">
+                  <li>
+                    <a class="tlink" href={a.href} target="_blank" rel="noopener">
+                      Open <span aria-hidden="true">↗</span>
+                    </a>
+                  </li>
+                </ul>
+              </li>
+            ))
+          }
+        </ul>
+        <h3 class="mono eyebrow ag-sub">{agents.check.writing}</h3>
+        <ul class="ag-writing">
+          {
+            writingLinks.map((e) => (
+              <li>
+                <a
+                  class="tlink"
+                  href={e.link!.href}
+                  hreflang={e.link!.lang ? 'es' : undefined}
+                  target="_blank"
+                  rel="noopener"
+                >
+                  {e.link!.title}
+                  {e.link!.lang && (
+                    <span class="tag" title="In Spanish">
+                      {e.link!.lang}
+                    </span>
+                  )}
+                  <span aria-hidden="true">↗</span>
+                </a>
+                <span class="mono ag-muted">{e.link!.meta}</span>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </section>
+
+    <section class="wrap ag-row" id="brief" aria-labelledby="brief-title">
+      <h2 class="ag-row__title" id="brief-title">{agents.brief.title}</h2>
+      <div class="ag-row__body">
+        <p>{agents.brief.lead}</p>
+        <ol class="ag-steps">
+          {
+            agents.brief.fields.map((f) => (
+              <li>
+                <p>{f.question}</p>
+                {f.onlyIf && <p class="mono ag-muted">{f.onlyIf.text}</p>}
+                {f.answers && (
+                  <ul class="ag-answers mono">
+                    {f.answers.map((a) => (
+                      <li>{a.label}</li>
+                    ))}
+                  </ul>
+                )}
+              </li>
+            ))
+          }
+        </ol>
+        <p class="ag-note">
+          {agents.brief.film}
+          <a
+            class="tlink mono"
+            href={agents.contact.studio.href}
+            hreflang="es"
+            target="_blank"
+            rel="noopener"
+          >
+            {agents.contact.studio.label}
+            <span class="tag" title="In Spanish">{agents.contact.studio.lang}</span>
+            <span aria-hidden="true">↗</span>
+          </a>
+        </p>
+      </div>
+    </section>
+
+    <section class="wrap ag-row" id="contact" aria-labelledby="contact-title">
+      <h2 class="ag-row__title" id="contact-title">{agents.contact.title}</h2>
+      <div class="ag-row__body">
+        <ol class="ag-steps">
+          {agents.contact.steps.map((s) => <li><p>{s}</p></li>)}
+        </ol>
+        <figure class="ag-template">
+          <figcaption class="mono eyebrow">{agents.contact.templateTitle}</figcaption>
+          <pre class="mono">{agents.contact.template.join('\n')}</pre>
+        </figure>
+        <p>
+          <a class="btn" href={agents.contact.cta.href} target="_blank" rel="noopener">
+            {agents.contact.cta.label}
+            <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"
+              ><path d="M3 11 11 3M4.5 3H11v6.5" fill="none" stroke="currentColor" stroke-width="1.5"></path></svg
+            >
+          </a>
+        </p>
+      </div>
+    </section>
+
+    <section class="wrap ag-row" id="rules" aria-labelledby="rules-title">
+      <h2 class="ag-row__title" id="rules-title">{agents.rules.title}</h2>
+      <div class="ag-row__body">
+        <ul class="ag-bullets">
+          {agents.rules.items.map((r) => <li>{r}</li>)}
+        </ul>
+      </div>
+    </section>
+
+    <section class="wrap ag-row" id="cite" aria-labelledby="cite-title">
+      <h2 class="ag-row__title" id="cite-title">{agents.cite.title}</h2>
+      <div class="ag-row__body">
+        <p class="mono ag-cite">{agents.cite.text}</p>
+      </div>
+    </section>
+
+    <section class="wrap ag-row" id="machine" aria-labelledby="machine-title">
+      <h2 class="ag-row__title" id="machine-title">{agents.machine.title}</h2>
+      <div class="ag-row__body">
+        <ul class="ag-machine mono">
+          {
+            agents.machine.links.map((l) => (
+              <li>
+                <a class="tlink" href={l.href}>
+                  {l.label}
+                </a>
+                <span class="ag-muted">{l.text}</span>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <footer class="wrap mono ag-foot">
+    <p>{footer.line}</p>
+    <p><a class="tlink" href="/">{agents.back}</a></p>
+    <p>{site.name}, {site.city}</p>
+  </footer>
+</Base>
+
+<style>
+  .ag-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    padding-block: 26px;
+  }
+
+  .ag-hero {
+    display: grid;
+    gap: clamp(22px, 3vh, 32px);
+    padding-top: clamp(56px, 12vh, 132px);
+    padding-bottom: clamp(56px, 9vh, 104px);
+  }
+
+  .ag-hero .h2 {
+    max-width: 14ch;
+  }
+
+  .ag-hero__eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .ag-hero__eyebrow :global(svg) {
+    width: 26px;
+    height: 26px;
+  }
+
+  .ag-hero__lead {
+    max-width: 40ch;
+  }
+
+  .ag-toc ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 26px;
+  }
+
+  .ag-row {
+    display: grid;
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+    gap: 24px var(--gutter);
+    padding-block: clamp(40px, 7vh, 72px);
+    border-top: 1px solid var(--line-light);
+  }
+
+  .ag-row__title {
+    font-size: clamp(1.4rem, 2.3vw, 2.2rem);
+    font-weight: 500;
+    letter-spacing: -0.025em;
+    line-height: 1.12;
+    max-width: 16ch;
+  }
+
+  .ag-row__body {
+    display: grid;
+    gap: 22px;
+    align-content: start;
+    max-width: 62ch;
+  }
+
+  .ag-quote {
+    font-size: var(--fs-lead);
+    line-height: 1.38;
+    letter-spacing: -0.005em;
+  }
+
+  .ag-muted {
+    color: var(--muted);
+  }
+
+  .ag-items {
+    border-top: 1px solid var(--line-light);
+  }
+
+  .ag-items > li {
+    display: grid;
+    gap: 10px;
+    padding-block: 22px;
+    border-bottom: 1px solid var(--line-light);
+  }
+
+  .ag-items__name {
+    font-size: 1.25rem;
+    font-weight: 500;
+    letter-spacing: -0.015em;
+    line-height: 1.2;
+  }
+
+  .ag-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 24px;
+  }
+
+  .ag-sub {
+    margin-top: 10px;
+  }
+
+  .ag-writing {
+    display: grid;
+    gap: 14px;
+  }
+
+  .ag-writing li {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 4px 16px;
+  }
+
+  .ag-steps {
+    counter-reset: step;
+    display: grid;
+    gap: 18px;
+  }
+
+  .ag-steps > li {
+    counter-increment: step;
+    position: relative;
+    display: grid;
+    gap: 8px;
+    padding-left: 44px;
+  }
+
+  .ag-steps > li::before {
+    content: counter(step, decimal-leading-zero);
+    position: absolute;
+    left: 0;
+    top: 0.25em;
+    font: 400 var(--fs-mono) / 1.5 var(--mono);
+    color: var(--muted);
+  }
+
+  .ag-answers {
+    display: grid;
+    gap: 4px;
+  }
+
+  .ag-answers li::before {
+    content: '— ';
+    color: var(--muted);
+  }
+
+  .ag-note {
+    display: grid;
+    gap: 10px;
+    justify-items: start;
+    padding-top: 18px;
+    border-top: 1px solid var(--line-light);
+  }
+
+  .ag-template {
+    display: grid;
+    gap: 10px;
+  }
+
+  .ag-template pre {
+    margin: 0;
+    padding: 18px 20px;
+    border: 1px solid var(--line-light);
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+  }
+
+  .ag .btn {
+    background: var(--ink);
+    color: var(--paper);
+  }
+
+  .ag .btn:hover,
+  .ag .btn:focus-visible {
+    background: var(--accent);
+    color: var(--paper);
+  }
+
+  .ag-bullets {
+    display: grid;
+    gap: 14px;
+  }
+
+  .ag-bullets li {
+    position: relative;
+    padding-left: 22px;
+  }
+
+  .ag-bullets li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.62em;
+    width: 8px;
+    height: 8px;
+    background: var(--accent);
+  }
+
+  .ag-cite {
+    overflow-wrap: anywhere;
+  }
+
+  .ag-machine {
+    display: grid;
+    gap: 10px;
+  }
+
+  .ag-machine li {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 16px;
+  }
+
+  .ag-foot {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 14px 40px;
+    padding-block: 28px 40px;
+    border-top: 1px solid var(--line-light);
+    color: var(--muted);
+  }
+
+  @media (max-width: 860px) {
+    .ag-row {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
